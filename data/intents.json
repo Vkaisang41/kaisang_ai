@@ -1,0 +1,24 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["hi", "hello", "hey", "good morning", "good evening"],
+      "responses": ["Hello!", "Hi there!", "Hey! How can I help you?"]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["bye", "see you", "goodbye", "later"],
+      "responses": ["Goodbye!", "See you later!", "Take care!"]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["thanks", "thank you", "appreciate it"],
+      "responses": ["You're welcome!", "No problem!", "Anytime!"]
+    },
+    {
+      "tag": "identity",
+      "patterns": ["who are you", "what is your name", "who made you"],
+      "responses": ["I am Kaisang AI, built by Vincent.", "I am your personal AI assistant."]
+    }
+  ]
+}
