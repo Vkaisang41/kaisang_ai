@@ -4,7 +4,7 @@ Kaisang AI is a full-stack web application that provides an intelligent AI assis
 
 ## Features
 
-- **AI Chat**: Real-time chat with AI using WebSocket connections
+- **AI Chat**: Real-time chat with AI using OpenAI's GPT model (like ChatGPT)
 - **Image Generation**: Generate images using OpenAI's DALL-E (requires API key)
 - **Project Management**: Organize your work with projects
 - **Search Functionality**: Search through chat history
@@ -19,7 +19,7 @@ Kaisang AI is a full-stack web application that provides an intelligent AI assis
 - **SQLite**: Database for storing user data, chats, projects, etc.
 - **WebSocket**: Real-time communication for chat
 - **JWT**: Token-based authentication
-- **OpenAI API**: For image generation
+- **OpenAI API**: For AI chat (GPT) and image generation (DALL-E)
 - **Scikit-learn**: Machine learning model for chat responses
 
 ### Frontend
@@ -55,10 +55,12 @@ Kaisang AI is a full-stack web application that provides an intelligent AI assis
    pip install -r requirements.txt
    ```
 
-4. (Optional) Set up OpenAI API key for image generation:
+4. Set up OpenAI API key for AI chat and image generation:
    ```bash
    export OPENAI_API_KEY="your-api-key-here"
    ```
+   
+   Get your API key from: https://platform.openai.com/api-keys
 
 ### Frontend Setup
 
@@ -127,7 +129,7 @@ kaisang_ai/
 
 ### Environment Variables
 
-- `OPENAI_API_KEY`: Your OpenAI API key for image generation
+- `OPENAI_API_KEY`: Your OpenAI API key for AI chat and image generation (required for chat)
 - `SECRET_KEY`: Secret key for JWT token signing (auto-generated if not set)
 
 ### Database

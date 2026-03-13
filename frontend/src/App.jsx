@@ -1,39 +1,16 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Layout from './layouts/Layout';
-import Dashboard from './pages/Dashboard';
-import Chat from './pages/Chat';
-import Search from './pages/Search';
-import Images from './pages/Images';
-import Projects from './pages/Projects';
-import Settings from './pages/Settings';
-import Account from './pages/Account';
+import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import Chat from './pages/Chat';
+import api from './utils/api';
 
-const ProtectedRoutes = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-    }
-  }, [navigate]);
-
-  return (
-    <Layout>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/chat/:id" element={<Chat />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/images" element={<Images />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/" element={<Dashboard />} />
-      </Routes>
-    </Layout>
-  );
+const MainApp = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+  return <Chat />;
 };
 
 function App() {
@@ -41,8 +18,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/*" element={<ProtectedRoutes />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/*" element={<MainApp />} />
       </Routes>
     </Router>
   );

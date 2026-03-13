@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
-const Login = () => {
+const Register = () => {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,18 +15,15 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await api.post('/auth/login', new URLSearchParams({
+      const response = await api.post('/auth/register', {
         username,
+        email,
         password,
-      }), {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
       });
       localStorage.setItem('token', response.data.access_token);
       navigate('/');
     } catch (err) {
-      setError('Invalid username or password');
+      setError('Registration failed. Username or email may already exist.');
     } finally {
       setLoading(false);
     }
@@ -46,9 +44,9 @@ const Login = () => {
 
         <div className="bg-[#2a2a2a] rounded-lg p-8 border border-gray-700">
           <h2 className="text-2xl font-semibold text-white mb-2 text-center">
-            Welcome back
+            Create your account
           </h2>
-          <p className="text-gray-400 text-center mb-6">Enter your credentials to access your account</p>
+          <p className="text-gray-400 text-center mb-6">Start chatting with AI today</p>
           
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
@@ -63,9 +61,25 @@ const Login = () => {
                   autoComplete="username"
                   required
                   className="w-full px-4 py-3 bg-[#171717] border border-gray-600 text-white rounded-lg focus:outline-none focus:border-green-500 transition-colors"
-                  placeholder="Enter your username"
+                  placeholder="Choose a username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  className="w-full px-4 py-3 bg-[#171717] border border-gray-600 text-white rounded-lg focus:outline-none focus:border-green-500 transition-colors"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div>
@@ -76,10 +90,10 @@ const Login = () => {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                   className="w-full px-4 py-3 bg-[#171717] border border-gray-600 text-white rounded-lg focus:outline-none focus:border-green-500 transition-colors"
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -98,16 +112,16 @@ const Login = () => {
                 disabled={loading}
                 className="w-full py-3 px-4 bg-green-600 hover:bg-green-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
               >
-                {loading ? 'Signing in...' : 'Sign in'}
+                {loading ? 'Creating account...' : 'Create account'}
               </button>
             </div>
           </form>
           
           <div className="mt-6 text-center">
             <p className="text-gray-400">
-              Don't have an account?{' '}
-              <a href="/register" className="text-green-500 hover:text-green-400 font-medium">
-                Sign up
+              Already have an account?{' '}
+              <a href="/login" className="text-green-500 hover:text-green-400 font-medium">
+                Sign in
               </a>
             </p>
           </div>
@@ -121,4 +135,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

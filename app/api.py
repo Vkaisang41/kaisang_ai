@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from pydantic import BaseModel
 from app.predict import predict
+from app.scraper import scrape_website
 import os
 import json
 import shutil
@@ -95,13 +96,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 def verify_password(plain_password, hashed_password):
-    # Truncate to 72 bytes (not characters) to match bcrypt's limit
-    truncated_password = plain_password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
+    # Truncate to 72 characters to match the hashing
+    truncated_password = plain_password[:72]
     return pwd_context.verify(truncated_password, hashed_password)
 
 def get_password_hash(password):
-    # Truncate to 72 bytes (not characters) to comply with bcrypt limit
-    truncated_password = password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
+    # Truncate to 72 characters to comply with bcrypt limit
+    truncated_password = password[:72]
     return pwd_context.hash(truncated_password)
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
@@ -167,6 +168,9 @@ class Settings(BaseModel):
 class ImageGenerate(BaseModel):
     prompt: str
     project_id: int = None
+
+class ScrapeRequest(BaseModel):
+    url: str
 
 # App
 app = FastAPI(title="Kaisang AI")
@@ -264,9 +268,11 @@ async def websocket_chat(chat_id: int, websocket: WebSocket, token: str = Query(
     try:
         while True:
             data = await websocket.receive_text()
-            response = predict(data)
+            # Get full conversation history for context
+            conversation_history = chat.messages if chat.messages else []
+            response = predict(data, conversation_history)
             message_user = {"role": "user", "content": data, "timestamp": str(datetime.utcnow())}
-            message_ai = {"role": "ai", "content": response, "timestamp": str(datetime.utcnow())}
+            message_ai = {"role": "assistant", "content": response['content'], "timestamp": str(datetime.utcnow())}
             chat.messages.append(message_user)
             chat.messages.append(message_ai)
             db.commit()
@@ -395,6 +401,11 @@ def generate_image(request: ImageGenerate, current_user: User = Depends(get_curr
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Image generation failed: {str(e)}")
 
+@app.post("/scrape")
+def scrape_data(request: ScrapeRequest, current_user: User = Depends(get_current_user)):
+    data = scrape_website(request.url)
+    return {"data": data}
+
 # Search endpoints
 @app.post("/search")
 def perform_search(search: SearchRequest, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -467,8 +478,9 @@ def delete_account(current_user: User = Depends(get_current_user), db: Session =
 # Keep old predict for compatibility
 class Query(BaseModel):
     text: str
+    conversation_history: list = None
 
 @app.post("/predict")
 def get_prediction(query: Query):
-    response = predict(query.text)
-    return {"input": query.text, "response": response}
+    response = predict(query.text, query.conversation_history)
+    return {"input": query.text, **response}

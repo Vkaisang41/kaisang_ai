@@ -2,23 +2,53 @@
   "intents": [
     {
       "tag": "greeting",
-      "patterns": ["hi", "hello", "hey", "good morning", "good evening"],
-      "responses": ["Hello!", "Hi there!", "Hey! How can I help you?"]
+      "patterns": ["hi", "hello", "hey", "good morning", "good evening", "yo", "sup", "howdy", "greetings", "hi there"],
+      "responses": ["Hello!", "Hi there!", "Hey! How can I help you?", "Greetings!", "Good to see you!"]
     },
     {
       "tag": "goodbye",
-      "patterns": ["bye", "see you", "goodbye", "later"],
-      "responses": ["Goodbye!", "See you later!", "Take care!"]
+      "patterns": ["bye", "see you", "goodbye", "later", "farewell", "take care", "see you soon", "bye bye"],
+      "responses": ["Goodbye!", "See you later!", "Take care!", "Farewell!", "Until next time!"]
     },
     {
       "tag": "thanks",
-      "patterns": ["thanks", "thank you", "appreciate it"],
-      "responses": ["You're welcome!", "No problem!", "Anytime!"]
+      "patterns": ["thanks", "thank you", "appreciate it", "thanks a lot", "thank you so much", "grateful"],
+      "responses": ["You're welcome!", "No problem!", "Anytime!", "Glad I could help!", "My pleasure!"]
     },
     {
       "tag": "identity",
-      "patterns": ["who are you", "what is your name", "who made you"],
-      "responses": ["I am Kaisang AI, built by Vincent.", "I am your personal AI assistant."]
+      "patterns": ["who are you", "what is your name", "who made you", "what are you", "tell me about yourself"],
+      "responses": ["I am Kaisang AI, built by Vincent.", "I am your personal AI assistant.", "I'm Kaisang, an AI created to help you."]
+    },
+    {
+      "tag": "help",
+      "patterns": ["help", "help me", "I need help", "can you help", "assist me", "what can you do"],
+      "responses": ["I'm here to help! What do you need?", "How can I assist you today?", "Sure, what can I help you with?"]
+    },
+    {
+      "tag": "explain",
+      "patterns": ["explain", "what is", "how does", "tell me about", "describe", "clarify"],
+      "responses": ["I'd be happy to explain that.", "Let me break it down for you.", "Here's what I know about that."]
+    },
+    {
+      "tag": "coding",
+      "patterns": ["code", "programming", "python", "javascript", "write code", "debug", "fix code"],
+      "responses": ["I can help with coding! What language are you working with?", "Programming is my thing. What's the issue?", "Let's tackle that code problem."]
+    },
+    {
+      "tag": "project",
+      "patterns": ["project", "my project", "work on", "build", "create", "develop"],
+      "responses": ["Sounds like an interesting project! How can I help?", "Projects are fun. What are you working on?", "I can assist with your project development."]
+    },
+    {
+      "tag": "error",
+      "patterns": ["error", "bug", "problem", "issue", "not working", "broken", "fix"],
+      "responses": ["Let's troubleshoot that error.", "I can help debug that issue.", "What error are you encountering?"]
+    },
+    {
+      "tag": "images",
+      "patterns": ["image", "picture", "photo", "generate image", "create image", "art"],
+      "responses": ["I can help with images! What would you like to create?", "Image generation is available. Describe what you want.", "Let's make some art!"]
     }
   ]
 }
