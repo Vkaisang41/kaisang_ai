@@ -27,6 +27,12 @@ const Chat = () => {
     if (currentChat) {
       setMessages(currentChat.messages || []);
       connectWebSocket(currentChat.id);
+      // Update the chat in the chats array with latest messages
+      setChats(prev => prev.map(c => 
+        c.id === currentChat.id 
+          ? { ...c, messages: currentChat.messages || [] } 
+          : c
+      ));
     } else {
       if (wsRef.current) {
         wsRef.current.close();
@@ -92,7 +98,18 @@ const Chat = () => {
     };
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      setMessages(prev => [...prev, message]);
+      setMessages(prev => {
+        const newMessages = [...prev, message];
+        // Update the chat in chats array with the new message
+        if (currentChat) {
+          setChats(prevChats => prevChats.map(c => 
+            c.id === currentChat.id 
+              ? { ...c, messages: newMessages } 
+              : c
+          ));
+        }
+        return newMessages;
+      });
       setLoading(false);
     };
     ws.onclose = () => {
@@ -109,7 +126,18 @@ const Chat = () => {
   const sendMessage = () => {
     if (!input.trim() || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
     const userMessage = { role: 'user', content: input, timestamp: new Date().toISOString() };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => {
+      const newMessages = [...prev, userMessage];
+      // Update the chat in chats array with the user message
+      if (currentChat) {
+        setChats(prevChats => prevChats.map(c => 
+          c.id === currentChat.id 
+            ? { ...c, messages: newMessages } 
+            : c
+        ));
+      }
+      return newMessages;
+    });
     setLoading(true);
     wsRef.current.send(input);
     setInput('');
